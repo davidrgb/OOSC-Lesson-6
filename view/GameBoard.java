@@ -16,6 +16,7 @@ import controller.KeyController;
 import controller.TimerListener;
 import model.Food;
 import model.Snake;
+import model.observerPattern.SnakeObserver;
 
 public class GameBoard {
 
@@ -31,7 +32,9 @@ public class GameBoard {
     private JButton stopButton = new JButton("Stop");
     private JButton exitButton = new JButton("Exit");
     private JLabel scoreDisplay = new JLabel();
+    private int score = 0;
     private Timer timer;
+    private boolean gameOver;
 
     private Snake snake = new Snake();
 
@@ -48,6 +51,7 @@ public class GameBoard {
         JPanel northPanel = new JPanel();
         JLabel label = new JLabel("Score: ");
         northPanel.add(label);
+        scoreDisplay.setText("" + score);
         northPanel.add(scoreDisplay);
         cp.add(BorderLayout.NORTH, northPanel);
 
@@ -63,6 +67,8 @@ public class GameBoard {
 
         ButtonClickListener buttonListener = new ButtonClickListener(this);
         startButton.addActionListener(buttonListener);
+        stopButton.addActionListener(buttonListener);
+        exitButton.addActionListener(buttonListener);
         
         KeyController keyController = new KeyController(this);
         canvas.addKeyListener(keyController);
@@ -75,6 +81,9 @@ public class GameBoard {
         exitButton.setFocusable(false);
         label.setFocusable(false);
         scoreDisplay.setFocusable(false);
+
+        SnakeObserver observer = new SnakeObserver(this);
+        snake.addSnakeListener(observer);
 
         timer = new Timer(DELAY, new TimerListener(this));
         timer.start();
@@ -110,5 +119,29 @@ public class GameBoard {
 
     public JButton getExitButton() {
         return exitButton;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public JLabel getScoreDisplay() {
+        return scoreDisplay;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public Timer getTimer() {
+        return timer;
     }
 }
